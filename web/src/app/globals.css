@@ -1,0 +1,8 @@
+:root { color-scheme: dark; font-family: Arial, sans-serif; }
+body { margin: 0; background: #111827; color: #f9fafb; }
+main { max-width: 44rem; margin: 12vh auto; padding: 2rem; }
+.eyebrow { color: #67e8f9; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+h1 { font-size: clamp(2rem, 6vw, 4rem); margin: .5rem 0; }
+button { background: #06b6d4; border: 0; border-radius: .4rem; color: #042f2e; cursor: pointer; font-weight: 700; margin: 1rem 0; padding: .7rem 1rem; }
+button:disabled { cursor: wait; opacity: .6; }
+section { border: 1px solid #374151; border-radius: .5rem; padding: 1rem; }
