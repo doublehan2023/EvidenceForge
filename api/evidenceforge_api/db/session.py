@@ -1,14 +1,22 @@
 from collections.abc import AsyncIterator
 from functools import lru_cache
 
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
-from evidenceforge_api.config import get_settings
+from evidenceforge_api.config import get_settings, to_asyncpg_url
 
 
 @lru_cache
-def get_engine():  # type: ignore[no-untyped-def]
-    return create_async_engine(get_settings().database_url, pool_pre_ping=True)
+def get_engine() -> AsyncEngine:
+    connection = to_asyncpg_url(get_settings().database_url)
+    return create_async_engine(
+        connection.url, connect_args=connection.connect_args, pool_pre_ping=True
+    )
 
 
 @lru_cache

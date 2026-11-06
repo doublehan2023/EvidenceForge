@@ -2,16 +2,16 @@ import asyncio
 from logging.config import fileConfig
 
 from alembic import context
-from sqlalchemy import pool
 from sqlalchemy.engine import Connection
-from sqlalchemy.ext.asyncio import async_engine_from_config
+from sqlalchemy.ext.asyncio import create_async_engine
 
-from evidenceforge_api.config import get_settings
+from evidenceforge_api.config import get_settings, to_asyncpg_url
 from evidenceforge_api.db.base import Base
 import evidenceforge_api.models  # noqa: F401
 
 config = context.config
-config.set_main_option("sqlalchemy.url", get_settings().database_url)
+database_connection = to_asyncpg_url(get_settings().migration_database_url)
+config.set_main_option("sqlalchemy.url", database_connection.url)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
@@ -37,8 +37,8 @@ def do_run_migrations(connection: Connection) -> None:
 
 
 async def run_async_migrations() -> None:
-    connectable = async_engine_from_config(
-        config.get_section(config.config_ini_section, {}), prefix="sqlalchemy.", poolclass=pool.NullPool
+    connectable = create_async_engine(
+        database_connection.url, connect_args=database_connection.connect_args
     )
     async with connectable.connect() as connection:
         await connection.run_sync(do_run_migrations)

@@ -46,3 +46,4 @@ crash.*.log
 .vscode/
 *.swp
 *.swo
+.neon
