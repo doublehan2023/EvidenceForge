@@ -28,6 +28,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+*.tsbuildinfo
 
 # Terraform
 .terraform/
@@ -45,3 +46,4 @@ crash.*.log
 .vscode/
 *.swp
 *.swo
+.neon

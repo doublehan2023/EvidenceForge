@@ -22,10 +22,9 @@ on cloud-provider resources.
 
 ## Phase 0 status
 
-This repository currently provides the Phase 0 architecture skeleton. The next
-milestone is a one-command local development stack containing the web, API,
-worker, PostgreSQL with pgvector, S3-compatible object storage, and local SQS
-emulation.
+Phase 0 provides a one-command local development stack containing the web,
+API, worker, PostgreSQL with pgvector, and LocalStack emulation for both
+S3-compatible object storage and SQS.
 
 ## Local configuration
 
@@ -37,6 +36,43 @@ cp .env.example .env
 
 `.env` is intentionally untracked. Do not commit credentials or environment-
 specific endpoints.
+
+## Quick start
+
+Install local development dependencies once:
+
+```sh
+python3 -m venv .venv
+.venv/bin/pip install -e '.[dev]'
+(cd web && npm ci)
+```
+
+Then start and verify the local platform:
+
+```sh
+make up
+make migrate
+make smoke
+```
+
+Open `http://localhost:3000` to see the frontend status page. Run `make lint`,
+`make typecheck`, and `make test` before opening a pull request.
+
+## Neon Postgres
+
+`neon.ts` declares the project's Neon Postgres configuration. `neon deploy`
+pulls the linked branch's credentials into the ignored `.env` file.
+
+- `DATABASE_URL` is the pooled application connection used by FastAPI.
+- `DATABASE_URL_UNPOOLED` is the direct connection used automatically by
+  Alembic for migrations.
+
+The API converts standard Neon `postgresql://` URLs to SQLAlchemy's asyncpg
+driver while keeping TLS certificate validation enabled. Run migrations with:
+
+```sh
+.venv/bin/alembic upgrade head
+```
 
 ## Development principles
 
