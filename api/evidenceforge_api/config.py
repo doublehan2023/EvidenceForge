@@ -45,11 +45,17 @@ class Settings(BaseSettings):
     s3_bucket: str
     sqs_queue_name: str
     api_port: int = 8000
+    cors_allowed_origins: str = "http://localhost:3000"
 
     @property
     def migration_database_url(self) -> str:
         """Prefer Neon's direct connection for Alembic and admin operations."""
         return self.database_url_unpooled or self.database_url
+
+    @property
+    def allowed_cors_origins(self) -> list[str]:
+        """Parse a comma-separated explicit browser-origin allowlist."""
+        return [origin.strip() for origin in self.cors_allowed_origins.split(",") if origin.strip()]
 
 
 @lru_cache
